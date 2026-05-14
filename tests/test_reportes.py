@@ -11,9 +11,9 @@ from src.reportes import (
     calcular_promedio_estudiante,
     reporte_general,
     ranking_estudiantes,
-    GENERAR_REPORTE_CSV,
-    FORMATO_FECHA,
-    VERSION_REPORTE,
+    generar_reporte_csv,
+    formato_fecha,
+    version_reporte,
 )
 
 
@@ -190,43 +190,43 @@ class TestRankingEstudiantes:
 class TestGenerarReporteCSV:
 
     def test_csv_incluye_encabezado(self, gestor_lleno, registro_est_lleno):
-        salida = GENERAR_REPORTE_CSV(gestor_lleno, registro_est_lleno)
+        salida = generar_reporte_csv(gestor_lleno, registro_est_lleno)
         primera_linea = salida.strip().split("\n")[0]
         assert "Estudiante" in primera_linea
         assert "Nota" in primera_linea
         assert "Estado" in primera_linea
 
     def test_csv_sin_estudiantes_solo_tiene_encabezado(self):
-        salida = GENERAR_REPORTE_CSV(GestorNotas(), RegistroEstudiantes())
+        salida = generar_reporte_csv(GestorNotas(), RegistroEstudiantes())
         lineas = [l for l in salida.strip().split("\n") if l]
         assert len(lineas) == 1
 
     def test_csv_contiene_nombre_del_estudiante(self, gestor_lleno, registro_est_lleno):
-        salida = GENERAR_REPORTE_CSV(gestor_lleno, registro_est_lleno)
+        salida = generar_reporte_csv(gestor_lleno, registro_est_lleno)
         assert "Ana" in salida
 
     def test_csv_clasifica_excelente(self, gestor_lleno, registro_est_lleno):
-        salida = GENERAR_REPORTE_CSV(gestor_lleno, registro_est_lleno)
+        salida = generar_reporte_csv(gestor_lleno, registro_est_lleno)
         assert "Excelente" in salida
 
     def test_csv_clasifica_sobresaliente(self, gestor_lleno, registro_est_lleno):
-        salida = GENERAR_REPORTE_CSV(gestor_lleno, registro_est_lleno)
+        salida = generar_reporte_csv(gestor_lleno, registro_est_lleno)
         assert "Sobresaliente" in salida
 
     def test_csv_clasifica_aprobado(self, gestor_lleno, registro_est_lleno):
-        salida = GENERAR_REPORTE_CSV(gestor_lleno, registro_est_lleno)
+        salida = generar_reporte_csv(gestor_lleno, registro_est_lleno)
         assert "Aprobado" in salida
 
     def test_csv_clasifica_reprobado(self, gestor_lleno, registro_est_lleno):
-        salida = GENERAR_REPORTE_CSV(gestor_lleno, registro_est_lleno)
+        salida = generar_reporte_csv(gestor_lleno, registro_est_lleno)
         assert "Reprobado" in salida
 
     def test_csv_clasifica_reprobado_grave(self, gestor_lleno, registro_est_lleno):
-        salida = GENERAR_REPORTE_CSV(gestor_lleno, registro_est_lleno)
+        salida = generar_reporte_csv(gestor_lleno, registro_est_lleno)
         assert "Reprobado Grave" in salida
 
     def test_csv_retorna_string(self, gestor_lleno, registro_est_lleno):
-        salida = GENERAR_REPORTE_CSV(gestor_lleno, registro_est_lleno)
+        salida = generar_reporte_csv(gestor_lleno, registro_est_lleno)
         assert isinstance(salida, str)
 
 
@@ -237,7 +237,7 @@ class TestGenerarReporteCSV:
 class TestConstantesSinUsar:
 
     def test_formato_fecha_esta_definido(self):
-        assert FORMATO_FECHA is not None
+        assert formato_fecha is not None
 
     def test_version_reporte_esta_definida(self):
-        assert VERSION_REPORTE is not None
+        assert version_reporte is not None
