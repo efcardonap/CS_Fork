@@ -73,7 +73,7 @@ pipeline {
                         env.DB_SECRET_KEY = env.ADMIN_PASSWORD 
                         
                         // Ejecuta tu script de Python aquí
-                        sh 'python3 autenticacion.py'
+                        sh 'python3 src/autenticacion.py'
                     }
                 }
             }
