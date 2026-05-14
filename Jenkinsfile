@@ -63,13 +63,17 @@ pipeline {
 
         stage('Ejecutar Script Python') {
             steps {
-                // Vincula el ID de la credencial a la variable de entorno que espera Python
-                withCredentials([string(credentialsId: 'notas-universitarias', variable: 'DB_SECRET_KEY')]) {
-                    env.ADMIN_PASSWORD = "consigue_este_valor_de_otro_secreto_o_env"
-                    sh 'python mi_script.py'
+                // Jenkins separa automáticamente el usuario y la contraseña en dos variables
+                withCredentials([usernamePassword(credentialsId: 'notas-universitarias', 
+                                                usernameVariable: 'ADMIN_USER', 
+                                                passwordVariable: 'ADMIN_PASSWORD')]) {
+                    
+                    // Definir la otra variable requerida por el script
+                    withCredentials([string(credentialsId: 'id-secreto-db', variable: 'DB_SECRET_KEY')]) {
+                        sh 'python mi_script.py'
+                    }
                 }
             }
-        }
 
         // ────────────────────────────────────────────────────
         // STAGE 1: Checkout
