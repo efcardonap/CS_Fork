@@ -47,11 +47,11 @@ class TestHashPassword:
     def test_retorna_string(self):
         assert isinstance(_hash_password("test"), str)
 
-    def test_longitud_es_32_caracteres_md5(self):
+    def test_longitud_y_formato_de_hash_seguro(self):
         assert len(_hash_password("cualquier_password")) == 97
 
-    def test_mismo_input_mismo_output(self):
-        assert _hash_password("abc") == _hash_password("abc")
+    def test_mismo_input_produce_outputs_diferentes_por_el_salt(self):
+        assert _hash_password("abc") != _hash_password("abc")
 
     def test_diferente_input_diferente_output(self):
         assert _hash_password("abc") != _hash_password("xyz")
@@ -59,7 +59,7 @@ class TestHashPassword:
     def test_string_vacio(self):
         resultado = _hash_password("")
         assert isinstance(resultado, str)
-        assert len(resultado) == 32
+        assert len(resultado) == 97
 
 
 # ─────────────────────────────────────────────
