@@ -69,7 +69,7 @@ pipeline {
                                                 passwordVariable: 'ADMIN_PASSWORD')]) {
                     
                     // Definir la otra variable requerida por el script
-                    withCredentials([string(credentialsId: 'id-secreto-db', variable: 'DB_SECRET_KEY')]) {
+                    withCredentials([string(credentialsId: 'notas-universitarias2', variable: 'DB_SECRET_KEY')]) {
                         sh 'python autenticacion.py'
                     }
                 }
