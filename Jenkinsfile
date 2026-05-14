@@ -62,19 +62,21 @@ pipeline {
     stages {
 
         stage('Ejecutar Script Python') {
-            steps {
-                // Jenkins separa automáticamente el usuario y la contraseña en dos variables
-                withCredentials([usernamePassword(credentialsId: 'notas-universitarias2', 
-                                                usernameVariable: 'ADMIN_USER', 
-                                                passwordVariable: 'ADMIN_PASSWORD')]) {
-                    
-                    // Definir la otra variable requerida por el script
-                    withCredentials([string(credentialsId: 'notas-universitarias2', variable: 'DB_SECRET_KEY')]) {
-                        sh 'python autenticacion.py'
-                    }
-                }
+    steps {
+        // Usa usernamePassword en lugar de string
+        withCredentials([usernamePassword(credentialsId: 'notas-universitarias2', 
+                                         usernameVariable: 'ADMIN_USER', 
+                                         passwordVariable: 'ADMIN_PASSWORD')]) {
+            script {
+                // Si necesitas mapear la contraseña también a la variable DB_SECRET_KEY que pide tu Python:
+                env.DB_SECRET_KEY = env.ADMIN_PASSWORD 
+                
+                // Ejecuta tu script de Python aquí
+                sh 'python autenticacion.py'
             }
         }
+    }
+}
     
 
         // ────────────────────────────────────────────────────
