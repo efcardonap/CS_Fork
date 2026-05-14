@@ -138,7 +138,7 @@ pipeline {
                 echo "============================================"
                 echo " Ejecutando pruebas unitarias con pytest..."
                 echo "============================================"
-                
+
                 withCredentials([usernamePassword(credentialsId: 'notas-universitarias2', 
                                                 usernameVariable: 'ADMIN_USER', 
                                                 passwordVariable: 'ADMIN_PASSWORD')]) {
@@ -148,20 +148,20 @@ pipeline {
                         
                         // Ejecuta tu script de Python aquí
                         sh 'python3 src/autenticacion.py'
+
+                        sh """
+                            python3 -m pytest tests/ \\
+                                --verbose \\
+                                --tb=short \\
+                                --cov=src \\
+                                --cov-report=xml:${REPORTS_DIR}/coverage.xml \\
+                                --cov-report=html:${REPORTS_DIR}/coverage_html \\
+                                --cov-report=term-missing \\
+                                --cov-fail-under=${COVERAGE_THRESHOLD} \\
+                                --junitxml=${REPORTS_DIR}/test_results.xml
+                        """
                     }
                 }
-
-                sh """
-                    python3 -m pytest tests/ \\
-                        --verbose \\
-                        --tb=short \\
-                        --cov=src \\
-                        --cov-report=xml:${REPORTS_DIR}/coverage.xml \\
-                        --cov-report=html:${REPORTS_DIR}/coverage_html \\
-                        --cov-report=term-missing \\
-                        --cov-fail-under=${COVERAGE_THRESHOLD} \\
-                        --junitxml=${REPORTS_DIR}/test_results.xml
-                """
             }
 
             // Publica los resultados de pruebas en la interfaz de Jenkins
