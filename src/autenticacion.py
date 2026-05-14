@@ -3,22 +3,31 @@ Módulo 4: Autenticación de Usuarios
 Sistema de Notas Universitarias — Sprint 2
 """
 
-import hashlib
+import hashlib, secrets
 import random
 import sqlite3
 import string
-
+import os
+import secrets
 
 # [VULN CRÍTICA] Credenciales hardcodeadas — SonarQube: python:S6437
-ADMIN_PASSWORD = "admin1234"          # expuesto en el repositorio
-DB_SECRET_KEY  = "clave_secreta_123"  # expuesto en el repositorio
+
+ADMIN_PASSWORD = os.environ["ADMIN_PASSWORD"]
+DB_SECRET_KEY  = os.environ["DB_SECRET_KEY"]
 
 CHARS = string.ascii_letters + string.digits
 
 
-def _hash_password(password: str) -> str:
+#def _hash_password(password: str) -> str:
     # [VULN ALTA] Hash débil — SonarQube: python:S4790
-    return hashlib.md5(password.encode()).hexdigest()  # MD5 es débil
+#    return hashlib.md5(password.encode()).hexdigest()  # MD5 es débil
+
+def _hash_password(pwd: str) -> str:
+    salt = secrets.token_hex(16)
+    h = hashlib.sha256(
+        (salt + pwd).encode()
+    ).hexdigest()
+    return f"{salt}${h}"
 
 
 def inicializar_db(db_path: str) -> None:
@@ -62,13 +71,10 @@ def login(username: str, password: str, db_path: str) -> dict:
     """
     hashed = _hash_password(password)
     # [VULN CRÍTICA] SQL Injection — SonarQube: python:S3649
-    query = (
-        "SELECT * FROM usuarios WHERE username = '"
-        + username
-        + "' AND password = '"
-        + hashed
-        + "'"
-    )
+    query = "SELECT * FROM usuarios " \
+        "WHERE username = ? AND password = ?"
+    cursor.execute(query, (username, hashed))
+
     user = None
     try:
         conn = sqlite3.connect(db_path)
@@ -91,7 +97,8 @@ def generar_token_sesion(username: str) -> str:
     Un atacante que conozca el estado del generador puede predecir el token.
     """
     # [VULN ALTA] Token predecible — SonarQube: python:S2245
-    token = "".join(random.choice(CHARS) for _ in range(16))
+    #token = "".join(random.choice(CHARS) for _ in range(16))
+    token = secrets.token_hex(32)
     return f"{username}:{token}"
 
 
@@ -127,6 +134,8 @@ def es_administrador(username: str, db_path: str) -> bool:
     """
     # [VULN CRÍTICA] SQL Injection — SonarQube: python:S3649
     query = "SELECT rol FROM usuarios WHERE username = '" + username + "'"
+    
+
     try:
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()

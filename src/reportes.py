@@ -45,13 +45,20 @@ def reporte_general(
     total_materias = len(materias)
 
     # [BUG] División por cero — SonarQube: python:S3518
-    promedio_global = sum(
-        gestor.promedio_estudiante(e.codigo) for e in estudiantes
-    ) / total_estudiantes  # ZeroDivisionError si total_estudiantes == 0
+    if total_estudiantes == 0:
+        promedio_global = 0.0
+    else:
+        promedio_global = sum(
+            gestor.promedio_estudiante(e.codigo)
+            for e in estudiantes
+        ) / total_estudiantes
 
-    promedio_por_materia = sum(
-        gestor.promedio_materia(m.codigo) for m in materias
-    ) / total_materias  # ZeroDivisionError si total_materias == 0
+    if promedio_por_materia == 0:
+        promedio_por_materia = 0.0
+    else:
+        promedio_por_materia = sum(
+            gestor.promedio_materia(m.codigo) for m in materias
+        ) / total_materias  # ZeroDivisionError si total_materias == 0
 
     return {
         "total_estudiantes": total_estudiantes,
