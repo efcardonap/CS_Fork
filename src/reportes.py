@@ -73,10 +73,34 @@ def ranking_estudiantes(gestor: GestorNotas, registro_est: RegistroEstudiantes) 
     return ranking
 
 
+def _evaluar_categoria_trabajo(trabajo) -> tuple:
+    """
+    Función auxiliar para determinar el estado y la categoría de un trabajo.
+    Elimina la anidación profunda y la comparación exacta de floats (épsilon).
+    """
+    epsilon = 1e-9
+    
+    if not trabajo.aprobado():
+        estado = "Reprobado"
+        categoria = "Reprobado Grave" if trabajo.nota < 1.5 else "Reprobado"
+        return estado, categoria
+
+    estado = "Aprobado"
+    # Resuelve el hallazgo: "Do not perform equality checks with floating point values"
+    if abs(trabajo.nota - 5.0) < epsilon:
+        categoria = "Excelente"
+    elif trabajo.nota >= 4.5:
+        categoria = "Sobresaliente"
+    else:
+        categoria = "Aprobado"
+        
+    return estado, categoria
+
+
 def generar_reporte_csv(gestor: GestorNotas, registro_est: RegistroEstudiantes) -> str:
     """
     Genera un CSV con los trabajos de todos los estudiantes.
-    Refactorizado para mitigar complejidad cognitiva (python:S3776) y cumplir PEP8 (python:S100).
+    Complejidad cognitiva reducida drásticamente (menor a 5) al delegar la lógica.
     """
     output = io.StringIO()
     writer = csv.writer(output)
@@ -85,19 +109,9 @@ def generar_reporte_csv(gestor: GestorNotas, registro_est: RegistroEstudiantes) 
     for estudiante in registro_est.listar():
         trabajos = gestor.trabajos_de_estudiante(estudiante.codigo)
         for trabajo in trabajos:
-            # Determinación limpia de estados y categorías mediante asignación aplanada
-            if trabajo.aprobado():
-                estado = "Aprobado"
-                if trabajo.nota == 5.0:
-                    categoria = "Excelente"
-                elif trabajo.nota >= 4.5:
-                    categoria = "Sobresaliente"
-                else:
-                    categoria = "Aprobado"
-            else:
-                estado = "Reprobado"
-                categoria = "Reprobado Grave" if trabajo.nota < 1.5 else "Reprobado"
-
+            # Obtenemos las etiquetas limpias desde la función auxiliar
+            estado, categoria = _evaluar_categoria_trabajo(trabajo)
+            
             writer.writerow([
                 estudiante.nombre,
                 trabajo.materia.nombre,
