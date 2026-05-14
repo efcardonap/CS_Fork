@@ -22,7 +22,7 @@ pipeline {
         //ADMIN_PASSWORD = credentials("admin1234")
         //DB_SECRET_KEY = credentials("clave_123")
 
-        ADMIN_PASSWORD = credentials('notas-universitarias') 
+        //ADMIN_PASSWORD = credentials('notas-universitarias') 
 
         // URL del contenedor SonarQube (nombre del contenedor en la red Docker)
         // Si corriste SonarQube con --name sonarqube y red calidad-net,
@@ -60,6 +60,16 @@ pipeline {
     //  STAGES — Etapas del pipeline
     // ══════════════════════════════════════════════════════════
     stages {
+
+        stage('Ejecutar Script Python') {
+            steps {
+                // Vincula el ID de la credencial a la variable de entorno que espera Python
+                withCredentials([string(credentialsId: 'notas-universitarias', variable: 'DB_SECRET_KEY')]) {
+                    env.ADMIN_PASSWORD = "consigue_este_valor_de_otro_secreto_o_env"
+                    sh 'python mi_script.py'
+                }
+            }
+        }
 
         // ────────────────────────────────────────────────────
         // STAGE 1: Checkout
