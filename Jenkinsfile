@@ -62,11 +62,6 @@ pipeline {
     stages {
 
         stage('Ejecutar Script Python') {
-            agent {
-                docker { 
-                    image 'python:3.13.5-slim' 
-                }
-            }
 
             steps {
                 // Usa usernamePassword en lugar de string
@@ -78,7 +73,7 @@ pipeline {
                         env.DB_SECRET_KEY = env.ADMIN_PASSWORD 
                         
                         // Ejecuta tu script de Python aquí
-                        sh 'python autenticacion.py'
+                        sh 'python3 autenticacion.py'
                     }
                 }
             }
