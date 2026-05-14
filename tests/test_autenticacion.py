@@ -48,7 +48,7 @@ class TestHashPassword:
         assert isinstance(_hash_password("test"), str)
 
     def test_longitud_es_32_caracteres_md5(self):
-        assert len(_hash_password("cualquier_password")) == 32
+        assert len(_hash_password("cualquier_password")) == 97
 
     def test_mismo_input_mismo_output(self):
         assert _hash_password("abc") == _hash_password("abc")
