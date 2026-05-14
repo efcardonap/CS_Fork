@@ -10,8 +10,8 @@ import secrets
 import sqlite3
 
 # Evita el colapso por KeyError si las variables no están mapeadas en el entorno local
-ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "test_pass")
-DB_SECRET_KEY  = os.environ.get("DB_SECRET_KEY", "test_key")
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
+DB_SECRET_KEY  = os.environ.get("DB_SECRET_KEY")
 
 CHARS = string.ascii_letters + string.digits
 
