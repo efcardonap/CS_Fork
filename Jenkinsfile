@@ -64,7 +64,7 @@ pipeline {
         stage('Ejecutar Script Python') {
             steps {
                 // Jenkins separa automáticamente el usuario y la contraseña en dos variables
-                withCredentials([usernamePassword(credentialsId: 'notas-universitarias', 
+                withCredentials([usernamePassword(credentialsId: 'notas-universitarias2', 
                                                 usernameVariable: 'ADMIN_USER', 
                                                 passwordVariable: 'ADMIN_PASSWORD')]) {
                     
