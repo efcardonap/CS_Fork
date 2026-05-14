@@ -70,7 +70,7 @@ pipeline {
                     
                     // Definir la otra variable requerida por el script
                     withCredentials([string(credentialsId: 'id-secreto-db', variable: 'DB_SECRET_KEY')]) {
-                        sh 'python mi_script.py'
+                        sh 'python autenticacion.py'
                     }
                 }
             }
