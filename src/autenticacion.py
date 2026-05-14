@@ -12,7 +12,7 @@ import secrets
 
 # [VULN CRÍTICA] Credenciales hardcodeadas — SonarQube: python:S6437
 
-ADMIN_PASSWORD = os.environ["ADMIN_PASSWORD"]
+ADMIN_PASSWORD1 = os.environ["ADMIN_PASSWORD"]
 DB_SECRET_KEY  = os.environ["DB_SECRET_KEY"]
 
 CHARS = string.ascii_letters + string.digits
