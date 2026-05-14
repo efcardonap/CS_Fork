@@ -29,6 +29,17 @@ def _hash_password(pwd: str) -> str:
     ).hexdigest()
     return f"{salt}${h}"
 
+def _verificar_password(pwd_ingresado: str, pwd_guardado: str) -> bool:
+    """Extrae la sal del hash guardado para verificar la contraseña ingresada."""
+    if not pwd_ingresado or not pwd_guardado or "$" not in pwd_guardado:
+        return False
+    try:
+        salt, hash_original = pwd_guardado.split("$")
+        nuevo_hash = hashlib.sha256((salt + pwd_ingresado).encode()).hexdigest()
+        return nuevo_hash == hash_original
+    except ValueError:
+        return False
+
 
 def inicializar_db(db_path: str) -> None:
     """Crea la tabla de usuarios si no existe."""
@@ -82,7 +93,7 @@ def login(username: str, password: str, db_path: str) -> dict:
         cursor.execute(query)
         row = cursor.fetchone()
         conn.close()
-        if row:
+        if row and _verificar_password(password, row[2]):
             user = {"id": row[0], "username": row[1], "rol": row[3]}
     except:  # bare except — SonarQube: python:S110
         print("Error al ejecutar query de autenticacion:", query)  # log a stdout — python:S106
@@ -98,7 +109,7 @@ def generar_token_sesion(username: str) -> str:
     """
     # [VULN ALTA] Token predecible — SonarQube: python:S2245
     #token = "".join(random.choice(CHARS) for _ in range(16))
-    token = secrets.token_hex(32)
+    token = secrets.token_hex(8) 
     return f"{username}:{token}"
 
 
