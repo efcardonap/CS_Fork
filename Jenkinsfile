@@ -19,10 +19,10 @@ pipeline {
         SONAR_PROJECT_KEY  = "notas-universitarias"
         SONAR_PROJECT_NAME = "Sistema de Notas Universitarias"
 
-        ADMIN_PASSWORD = credentials('admin1234')
-        DB_SECRET_KEY = credentials('clave_123')
+        //ADMIN_PASSWORD = credentials("admin1234")
+        //DB_SECRET_KEY = credentials("clave_123")
 
-        //ADMIN_PASSWORD = credentials('1184b4b43c64ea271059c74dd58413849a') 
+        ADMIN_PASSWORD = credentials('notas-universitarias') 
 
         // URL del contenedor SonarQube (nombre del contenedor en la red Docker)
         // Si corriste SonarQube con --name sonarqube y red calidad-net,
