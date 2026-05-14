@@ -14,7 +14,7 @@ pipeline {
 
     // ── VARIABLES GLOBALES ──────────────────────────────────
     environment {
-        REPORTS_DIR = 'reports'
+        
         // Nombre del proyecto tal como aparecerá en SonarQube
         SONAR_PROJECT_KEY  = "notas-universitarias"
         SONAR_PROJECT_NAME = "Sistema de Notas Universitarias"
