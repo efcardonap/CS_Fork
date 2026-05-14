@@ -12,8 +12,6 @@ from src.reportes import (
     reporte_general,
     ranking_estudiantes,
     generar_reporte_csv,
-    formato_fecha,
-    version_reporte,
 )
 
 
@@ -234,10 +232,3 @@ class TestGenerarReporteCSV:
 #  Tests: constantes sin usar (python:S1481)
 # ─────────────────────────────────────────────
 
-class TestConstantesSinUsar:
-
-    def test_formato_fecha_esta_definido(self):
-        assert formato_fecha is not None
-
-    def test_version_reporte_esta_definida(self):
-        assert version_reporte is not None
