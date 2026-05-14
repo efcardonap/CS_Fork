@@ -133,8 +133,12 @@ pipeline {
         // para que SonarQube pueda leerlo.
         // ────────────────────────────────────────────────────
         stage("3 · Pruebas unitarias") {
+
             steps {
-                // Usa usernamePassword en lugar de string
+                echo "============================================"
+                echo " Ejecutando pruebas unitarias con pytest..."
+                echo "============================================"
+                
                 withCredentials([usernamePassword(credentialsId: 'notas-universitarias2', 
                                                 usernameVariable: 'ADMIN_USER', 
                                                 passwordVariable: 'ADMIN_PASSWORD')]) {
@@ -146,12 +150,6 @@ pipeline {
                         sh 'python3 src/autenticacion.py'
                     }
                 }
-            }
-
-            steps {
-                echo "============================================"
-                echo " Ejecutando pruebas unitarias con pytest..."
-                echo "============================================"
 
                 sh """
                     python3 -m pytest tests/ \\
