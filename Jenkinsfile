@@ -62,21 +62,27 @@ pipeline {
     stages {
 
         stage('Ejecutar Script Python') {
-    steps {
-        // Usa usernamePassword en lugar de string
-        withCredentials([usernamePassword(credentialsId: 'notas-universitarias2', 
-                                         usernameVariable: 'ADMIN_USER', 
-                                         passwordVariable: 'ADMIN_PASSWORD')]) {
-            script {
-                // Si necesitas mapear la contraseña también a la variable DB_SECRET_KEY que pide tu Python:
-                env.DB_SECRET_KEY = env.ADMIN_PASSWORD 
-                
-                // Ejecuta tu script de Python aquí
-                sh 'python autenticacion.py'
+            agent {
+                docker { 
+                    image 'python:3.13.5-slim' 
+                }
+            }
+
+            steps {
+                // Usa usernamePassword en lugar de string
+                withCredentials([usernamePassword(credentialsId: 'notas-universitarias2', 
+                                                usernameVariable: 'ADMIN_USER', 
+                                                passwordVariable: 'ADMIN_PASSWORD')]) {
+                    script {
+                        // Si necesitas mapear la contraseña también a la variable DB_SECRET_KEY que pide tu Python:
+                        env.DB_SECRET_KEY = env.ADMIN_PASSWORD 
+                        
+                        // Ejecuta tu script de Python aquí
+                        sh 'python autenticacion.py'
+                    }
+                }
             }
         }
-    }
-}
     
 
         // ────────────────────────────────────────────────────
